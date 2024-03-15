@@ -283,16 +283,43 @@ A simple gauge with a single value (0 ... 1). The color displayed in the gauge c
 |------------|
 |<img src="https://github.com/dagronf/dagronf.github.io/raw/master/art/projects/DSFSparkline/types-new/wiper-gauge.png" width="400">|
 
-### Activity Grid <img src="./Art/doc/activity-grid-mini.png" height="8"/>
+### Activity Grid <img src="./Art/doc/activity-grid-mini.png" width="150"/>
 
 A Github-style activity grid. Each cell represents a discrete value in a progression with a color
 
 * Configurable horizontal/vertical cell count
+* Configurable cell spacing
 * Configurable fill schemes
 
 |            |            |
 |------------|------------|
 |<img src="./Art/doc/activity-grid-1.png" width="400">|<img src="./Art/doc/activity-grid-2.png" width="400">|
+
+### Circular Progress <img src="./Art/doc/circular-radial-3.png" height="18"/> <img src="./Art/doc/circular-radial-4.png" height="18"/> <img src="./Art/doc/circular-radial-5.png" height="18"/> <img src="./Art/doc/circular-radial-6.png" height="18"/>
+
+A circular progress graph
+
+* Configurable track width
+* Optional track background color
+* Configurable track padding to allow overlaying multiple progress graphs to replicate the health rings.
+* Configurable fill schemes
+
+| Simulated health rings |
+|------------------------|
+|<img src="./Art/doc/circular-health-0.0.png" height="48"/>&nbsp;<img src="./Art/doc/circular-health-0.33.png" height="48"/>&nbsp;<img src="./Art/doc/circular-health-0.66.png" height="48"/>&nbsp;<img src="./Art/doc/circular-health-1.0.png" height="48"/>|
+
+### Circular Gauge <img src="./Art/doc/circular-gauge-small-0.0.png" height="25" /> <img src="./Art/doc/circular-gauge-small-0.33.png" height="25" /> <img src="./Art/doc/circular-gauge-small-0.66.png" height="25" /> <img src="./Art/doc/circular-gauge-small-1.0.png" height="25" />
+
+A circular gauge
+
+* Configurable track/line width
+* Configurable fill/stroke schemes
+* Supports shadows/inner shadows
+* Animatable changes
+
+|      |       |       |       |
+|------|-------|-------|-------|
+| <a href="./Art/doc/circular-gauge-basic.png"> <img src="./Art/doc/circular-gauge-basic.png" height="64" /></a> | <a href="./Art/doc/circular-gauge-inner-inout.png"> <img src="./Art/doc/circular-gauge-inner-inout.png" height="64" /></a> | <a href="./Art/doc/circular-gauge-gradient.png"> <img src="./Art/doc/circular-gauge-gradient.png" height="64" /></a> | <a href="./Art/doc/circular-gauge-slightly.png"> <img src="./Art/doc/circular-gauge-slightly.png" height="30" /></a> |
 
 
 # Demos
@@ -305,7 +332,7 @@ There's also a simple Xcode Playground available in the `Demos/Playground` subfo
 
 ### Using prebuilt views
 
-A prebuilt view is useful to quickly add a sparkline using SwiftUI or via Interface Builder (while providing previews using @IBDesignable). These views a slightly more limited set of styling and customizations but are much quicker to implement than using overlays directly.
+A prebuilt view is useful to quickly add a sparkline using SwiftUI or via Interface Builder. These views a slightly more limited set of styling and customizations but are much quicker to implement than using overlays directly.
 
 For the most part, the prebuilt types will be all you need.
 
@@ -316,7 +343,7 @@ If you've used `DSFSparklines` prior to v4, these are the original view types th
 
 ### Using overlays
 
-There are three fundamental building blocks for an overlay sparkline. Overlay sparklines are more flexible and configurable than the pre-built views, but are more complex to set up and provides no support for @IBDesignable.
+There are three fundamental building blocks for an overlay sparkline. Overlay sparklines are more flexible and configurable than the pre-built views, but are more complex to set up.
 
 * **A surface** - where it will draw
 * **A datasource** - the set of values to draw
@@ -713,6 +740,24 @@ let image = bitmap.image(width: 200, height: 14, scale: 2)
 
 </details>
 
+<details>
+  <summary>`DSFSparklineOverlay.CircularGauge` <img src="./Art/doc/circular-gauge-small-0.66.png" width="18"/></summary>
+  
+```swift
+let bitmap = DSFSparklineSurface.Bitmap()
+let gauge = DSFSparklineOverlay.CircularGauge()
+gauge.value = 0.66
+
+bitmap.addOverlay(gauge)
+
+// Generate an image of the wiper gauge with retina scale
+let image = bitmap.image(width: 40, height: 40, scale: 2)
+
+// Do something with 'image'
+```
+
+</details>
+
 ### Component types
 
 A component represents an overlay that isn't a graph in itself.  Examples are grid lines, zero-lines, highlights etc.  A component uses the same datasource so that it aligns with the graph it is associated with.
@@ -725,7 +770,7 @@ A component represents an overlay that isn't a graph in itself.  Examples are gr
 
 ## Using prebuilt views
 
-DSFSparkline has a number of 'prebuilt' sparkline views available with a more limited scope, designed to be quicker to add to your project, especially relating to Interface Builder (the pre-built types provide an `@IBDesignable` interface) so you can design the look of your graph from directly within Interface Builder.
+DSFSparkline has a number of 'prebuilt' sparkline views available with a more limited scope, designed to be quicker to add to your project.
 
 Every prebuilt sparkline view has a SwiftUI companion view.
 
@@ -743,6 +788,7 @@ Every prebuilt sparkline view has a SwiftUI companion view.
 * `DSFSparklinePercentBarGraphView` / `DSFSparklinePercentBarGraphView.SwiftUI`
 * `DSFSparklineWiperGaugeGraphView` / `DSFSparklineWiperGaugeGraphView.SwiftUI`
 * `DSFSparklineActivityGridView` / `DSFSparklineActivityGridView.SwiftUI`
+* `DSFSparklineCircularGaugeView` / `DSFSparklineCircularGaugeView.SwiftUI`
 
 <details>
   <summary>Sample Swift code</summary>
@@ -986,6 +1032,12 @@ Add `https://github.com/dagronf/DSFSparkline` to your project.
 ![](https://github.com/dagronf/dagronf.github.io/raw/master/art/projects/DSFSparkline/DSFSparkline_lots.gif)
 
 ## Changes
+
+### `6.0.0`
+
+* Added CircularGauge, CircularProgress sparkline types
+* Removed support for `@IBDesignable` and `@IBInspectable` from the NSView/UIView implementations, as Xcode has
+  indicated that it will be dropping support in the near future
 
 ### `5.2.0`
 

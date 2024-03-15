@@ -30,12 +30,14 @@ public typealias DSFColor = NSColor
 public typealias DSFView = NSView
 public typealias DSFFont = NSFont
 public typealias DSFEdgeInsets = NSEdgeInsets
+public typealias DSFImage = NSImage
 #else
 import UIKit
 public typealias DSFColor = UIColor
 public typealias DSFView = UIView
 public typealias DSFFont = UIFont
 public typealias DSFEdgeInsets = UIEdgeInsets
+public typealias DSFImage = UIImage
 #endif
 
 #if canImport(SwiftUI)
@@ -65,31 +67,6 @@ public extension CGGradient {
 			colors: definition.map { $0.1 } as CFArray, // [c1, c2] as CFArray,
 			locations: definition.map { $0.0 } //[1.0, 0.0]
 		)!
-	}
-}
-
-
-extension CGContext {
-	/// Execute the supplied block within a `saveGState() / restoreGState()` pair, providing a context
-	/// to draw in during the execution of the block
-	///
-	/// - Parameter stateBlock: The block to execute within the new graphics state
-	/// - Parameter context: The context to draw into within the block
-	///
-	/// Example usage:
-	/// ```
-	///    context.usingGState { (ctx) in
-	///       ctx.addPath(unsetBackground)
-	///       ctx.setFillColor(bgc1.cgColor)
-	///       ctx.fillPath(using: .evenOdd)
-	///    }
-	/// ```
-	@inlinable func usingGState(stateBlock: (_ context: CGContext) throws -> Void) rethrows {
-		self.saveGState()
-		defer {
-			self.restoreGState()
-		}
-		try stateBlock(self)
 	}
 }
 
@@ -176,12 +153,9 @@ func DrawRect(primary: CGContext, rect: CGRect, color: CGColor = DSFColor.system
 
 #if !os(macOS)
 extension CGColor {
-	static var black: CGColor {
-		return CGColor(colorSpace: CGColorSpaceCreateDeviceRGB(), components: [0, 0, 0, 1])!
-	}
-	static var clear: CGColor {
-		return CGColor(colorSpace: CGColorSpaceCreateDeviceRGB(), components: [0, 0, 0, 0])!
-	}
+	static var black: CGColor { CGColor(gray: 0, alpha: 1) }
+	static var white: CGColor { CGColor(gray: 1, alpha: 1) }
+	static var clear: CGColor { CGColor(gray: 0, alpha: 0) }
 }
 #endif
 
@@ -344,5 +318,46 @@ extension DSFEdgeInsets {
 									left: max(self.left, other.left),
 									bottom: max(self.bottom, other.bottom),
 									right: max(self.right, other.right))
+	}
+}
+
+extension Array {
+	/// Return a copy of this array with 'element' appended
+	@inlinable func appending(_ element: Element) -> Self {
+		var result = self
+		result.append(element)
+		return result
+	}
+
+	/// Return a copy of this array with an array of 'element' appended
+	@inlinable func appending(contentsOf elements: [Element]) -> Self {
+		var result = self
+		result.append(contentsOf: elements)
+		return result
+	}
+}
+
+extension CGImage {
+	func flipped() -> CGImage? {
+		let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
+		let flipped = CGContext(
+			data: nil,
+			width: self.width,
+			height: self.height,
+			bitsPerComponent: 8,
+			bytesPerRow: 0,
+			space: CGColorSpaceCreateDeviceRGB(),
+			bitmapInfo: bitmapInfo.rawValue
+		)!
+
+		// Flip the context
+		flipped.translateBy(x: 0, y: CGFloat(height))
+		flipped.scaleBy(x: 1.0, y: -1.0)
+
+		// Draw the image into the context
+		flipped.draw(self, in: CGRect(x: 0, y: 0, width: self.width, height: self.height))
+
+		// Create a new CGImage from the context
+		return flipped.makeImage()
 	}
 }

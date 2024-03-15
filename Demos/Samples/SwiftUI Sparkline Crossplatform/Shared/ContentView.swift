@@ -34,6 +34,8 @@ struct ContentView: View {
 		Item(id: 13, name: "Percent Bar"),
 		Item(id: 14, name: "Wiper Gauge"),
 		Item(id: 15, name: "Activity Grid"),
+		Item(id: 16, name: "Circular Progress"),
+		Item(id: 17, name: "Circular Gauge"),
 
 		Item(id: 99, name: "Testing Harness")
 	]
@@ -59,7 +61,8 @@ struct ContentView_Previews: PreviewProvider {
 struct DetailView: View {
 	let item: Item
 	var body: some View {
-		Group {
+		Self._printChanges()
+		return ScrollView([.vertical]) {
 			switch item.id {
 			case 0: ReportView()
 			case 1: WinLossCreate()
@@ -74,15 +77,17 @@ struct DetailView: View {
 			case 10: BarDemoContentView()
 			case 11: BitmapGenerationView()
 			case 12: SwiftUIView(shouldAnimate: true)
-			case 13: PercentBar(shouldAnimate: true)
+			case 13: PercentBarView()
 			case 14: WiperGraphDemoView()
 			case 15: ActivityGridView()
+			case 16: CircularProgressView()
+			case 17: CircularGaugeView()
 
 			case 99: TestingView()
 
 			default: fatalError()
 			}
 		}
-		.padding()
+//		.padding()
 	}
 }

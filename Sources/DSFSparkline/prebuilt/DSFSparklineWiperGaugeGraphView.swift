@@ -26,13 +26,12 @@ import UIKit
 #endif
 
 /// A sparkline that draws a percent bar
-@IBDesignable
-public class DSFSparklineWiperGaugeGraphView: DSFSparklineSurfaceView {
+@objc public class DSFSparklineWiperGaugeGraphView: DSFSparklineSurfaceView {
 
 	// MARK: - Value
 
 	/// The initial value to display in the percent bar
-	@IBInspectable public var value: CGFloat = 0.2 {
+	@objc public dynamic var value: CGFloat = 0.2 {
 		didSet {
 			self.overlay.value = self.value
 		}
@@ -44,58 +43,58 @@ public class DSFSparklineWiperGaugeGraphView: DSFSparklineSurfaceView {
 		}
 	}
 
-	@IBInspectable public var animated: Bool = false {
+	@objc public var animationStyle: DSFSparkline.AnimationStyle? = nil {
 		didSet {
-			self.overlay.animated = animated
+			self.overlay.animationStyle = animationStyle
 		}
 	}
 
 #if os(macOS)
-	@IBInspectable public var gaugeUpperArcColor: NSColor = .textColor {
+	@objc public dynamic var gaugeUpperArcColor: NSColor = .textColor {
 		didSet {
 			self.overlay.gaugeUpperArcColor = gaugeUpperArcColor.cgColor
 		}
 	}
 
-	@IBInspectable public var valueBackgroundColor: NSColor = .quaternaryLabelColor {
+	@objc public dynamic var valueBackgroundColor: NSColor = .quaternaryLabelColor {
 		didSet {
 			self.overlay.valueBackgroundColor = valueBackgroundColor.cgColor
 		}
 	}
 
 	/// The color of the pointer component of the gauge
-	@IBInspectable public var gaugePointerColor: NSColor = .textColor {
+	@objc public dynamic var gaugePointerColor: NSColor = .textColor {
 		didSet {
 			self.overlay.gaugePointerColor = gaugePointerColor.cgColor
 		}
 	}
 	/// The color of the pointer component of the gauge
-	@IBInspectable public var gaugeBackgroundColor: NSColor? = nil {
+	@objc public dynamic var gaugeBackgroundColor: NSColor? = nil {
 		didSet {
 			self.overlay.gaugeBackgroundColor = gaugeBackgroundColor?.cgColor
 		}
 	}
 	#else
-	@IBInspectable public var gaugeUpperArcColor: UIColor = .label {
+	@objc public dynamic var gaugeUpperArcColor: UIColor = .label {
 		didSet {
 			self.overlay.gaugeUpperArcColor = gaugeUpperArcColor.cgColor
 		}
 	}
 
-	@IBInspectable public var valueBackgroundColor: UIColor = .quaternaryLabel {
+	@objc public dynamic var valueBackgroundColor: UIColor = .quaternaryLabel {
 		didSet {
 			self.overlay.valueBackgroundColor = valueBackgroundColor.cgColor
 		}
 	}
 
 	/// The color of the pointer component of the gauge
-	@IBInspectable public var gaugePointerColor: UIColor = .label {
+	@objc public dynamic var gaugePointerColor: UIColor = .label {
 		didSet {
 			self.overlay.gaugePointerColor = gaugePointerColor.cgColor
 		}
 	}
 	/// The color of the pointer component of the gauge
-	@IBInspectable public var gaugeBackgroundColor: UIColor? = nil {
+	@objc public dynamic var gaugeBackgroundColor: UIColor? = nil {
 		didSet {
 			self.overlay.gaugeBackgroundColor = gaugeBackgroundColor?.cgColor
 		}
@@ -121,16 +120,6 @@ public class DSFSparklineWiperGaugeGraphView: DSFSparklineSurfaceView {
 }
 
 extension DSFSparklineWiperGaugeGraphView {
-	public override func prepareForInterfaceBuilder() {
-		super.prepareForInterfaceBuilder()
-
-		#if TARGET_INTERFACE_BUILDER
-		self.configure()
-		self.overlay.setNeedsDisplay()
-		self.updateDisplay()
-		#endif
-	}
-
 	#if os(macOS)
 	public override func updateLayer() {
 		// Captured to handle dark/light mode changes
@@ -144,7 +133,7 @@ private extension DSFSparklineWiperGaugeGraphView {
 	func configure() {
 		self.addOverlay(self.overlay)
 		self.overlay.value = self.value
-		self.overlay.animated = animated
+		self.overlay.animationStyle = animationStyle
 		self.updateColors()
 	}
 	

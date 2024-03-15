@@ -27,9 +27,12 @@ import Foundation
 @objc public protocol DSFSparklineFillable: NSObjectProtocol {
 	@objc func fill(context: CGContext, bounds: CGRect)
 	@objc func copyFill() -> DSFSparklineFillable
+	@objc func color(at fractionalValue: CGFloat) -> CGColor
 }
 
 public extension DSFSparkline {
 	/// Defining a namespace for fillables
-	class Fill { }
+	class Fill {
+		private init() {}
+	}
 }
